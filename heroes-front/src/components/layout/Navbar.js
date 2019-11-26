@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
 
-const Navbar = () => {
+const Navbar = ({ isLogged }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark" id="mainNav">
       <div className="container">
@@ -23,20 +23,32 @@ const Navbar = () => {
         </button>
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav text-uppercase ml-auto">
+            {!isLogged && (
+              <li className="nav-item">
+                <Link
+                  className="nav-link js-scroll-trigger"
+                  to="/heroes/create"
+                >
+                  Create
+                </Link>
+              </li>
+            )}
             <li className="nav-item">
-              <Link className="nav-link js-scroll-trigger" to="/about">
-                About
-              </Link>
+              {isLogged && (
+                <Link className="nav-link js-scroll-trigger" to="/users/login">
+                  Login
+                </Link>
+              )}
             </li>
             <li className="nav-item">
-              <Link className="nav-link js-scroll-trigger" to="/users/login">
-                Login
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link js-scroll-trigger" to="/users/register">
-                Register
-              </Link>
+              {isLogged && (
+                <Link
+                  className="nav-link js-scroll-trigger"
+                  to="/users/register"
+                >
+                  Register
+                </Link>
+              )}
             </li>
           </ul>
         </div>

@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-
+import { getToken, saveToken } from '../../../utils/jwt';
 import "../../blur.css";
 import axios from "axios";
-import InputLabel from "../../label/InputLabel";
+
 
 class LoginForm extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ class LoginForm extends Component {
     event.preventDefault();
     const { username, password } = this.state;
     const user = { username, password };
-
+  
     const axiosConfig = {
       headers: {
         "Content-Type": "application/json;charset=UTF-8",
@@ -34,8 +34,16 @@ class LoginForm extends Component {
       }
     };
 
-    axios.post("http://localhost:8080/api/users/login", user, axiosConfig);
-    this.props.history.push("/home");
+    if(getToken()) {
+        axiosConfig.headers['Authorization'] = 'Bearer ' + getToken();
+    }
+    
+    axios.post("http://localhost:8080/login", user, axiosConfig)
+    .then((data, status, request) => { 
+        saveToken(data.data);
+         this.props.history.push("/home");
+    });
+
   }
 
   render() {

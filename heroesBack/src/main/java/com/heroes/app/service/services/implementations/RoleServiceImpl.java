@@ -8,6 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -23,13 +26,21 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public void seedRolesInDB() {
         if (this.roleRepository.count() == 0) {
-            this.roleRepository.save(new Role("USER"));
-            this.roleRepository.save(new Role("ADMIN"));
+            this.roleRepository.saveAndFlush(new Role("USER"));
+            this.roleRepository.saveAndFlush(new Role("ADMIN"));
         }
     }
 
     @Override
-    public RoleServiceModel findRole(String role) {
-        return this.modelMapper.map(this.roleRepository.getByAuthority(role), RoleServiceModel.class);
+    public RoleServiceModel finByAuthority(String role) {
+        return this.modelMapper.map(this.roleRepository.findByAuthority(role), RoleServiceModel.class);
+    }
+
+    @Override
+    public Set<RoleServiceModel> findAllRoles() {
+        return this.roleRepository.findAll()
+                .stream()
+                .map(r -> this.modelMapper.map(r, RoleServiceModel.class))
+                .collect(Collectors.toSet());
     }
 }

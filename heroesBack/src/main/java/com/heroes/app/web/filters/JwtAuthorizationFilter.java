@@ -2,6 +2,7 @@ package com.heroes.app.web.filters;
 
 import com.heroes.app.service.services.UserService;
 import io.jsonwebtoken.Jwts;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Order(1)
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     private UserService userService;
 
@@ -25,6 +27,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String header = request.getHeader("Authorization");
+        System.out.println(request.getHeaderNames());
 
         if(header == null || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
@@ -39,13 +42,13 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader("Authorization").substring(7);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = null;
 
         if (token != null) {
             String username = Jwts.parser()
                     .setSigningKey("Secret".getBytes())
-                    .parseClaimsJws(token.replace("Bearer ", ""))
+                    .parseClaimsJws(token)
                     .getBody()
                     .getSubject();
 

@@ -1,11 +1,13 @@
 package com.heroes.app.service.models;
 
+import java.util.Set;
+
 public class UserServiceModel {
 
     private String username;
     private String password;
     private String email;
-    private String role;
+    private Set<RoleServiceModel> authorities;
 
     public UserServiceModel() {
     }
@@ -34,11 +36,11 @@ public class UserServiceModel {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public Set<RoleServiceModel> getAuthorities() {
+        return authorities;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setAuthorities(Set<RoleServiceModel> authorities) {
+        this.authorities = authorities;
     }
 }

@@ -1,6 +1,8 @@
 package com.heroes.app.service.services.implementations;
 
+import com.heroes.app.data.models.Role;
 import com.heroes.app.data.models.User;
+import com.heroes.app.data.repositories.RoleRepository;
 import com.heroes.app.data.repositories.UserRepository;
 import com.heroes.app.service.models.UserServiceModel;
 import com.heroes.app.service.services.RoleService;
@@ -12,9 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.heroes.app.data.models.Role;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedHashSet;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,54 +25,32 @@ public class UserServiceImpl implements UserService {
     private final ModelMapper modelMapper;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final RoleService roleService;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder, RoleService roleService) {
+    public UserServiceImpl(UserRepository userRepository, ModelMapper modelMapper, BCryptPasswordEncoder bCryptPasswordEncoder, RoleService roleService, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.roleService = roleService;
-    }
-
-    private String getUserAuthority(String userId) {
-        return this
-                .userRepository
-                .findById(userId)
-                .get()
-                .getAuthorities()
-                .stream()
-                .findFirst()
-                .get()
-                .getAuthority();
-    }
-    private Set<Role> getAuthorities(String authority) {
-        Set<Role> userAuthorities = new HashSet<>();
-
-        //userAuthorities.add(this.roleRepository.getByAuthority(authority));
-
-        return userAuthorities;
+        this.roleRepository = roleRepository;
     }
 
     @Override
-    public boolean register(UserServiceModel user) {
-        User userEntity = this.modelMapper.map(user, User.class);
+    public boolean register(UserServiceModel userServiceModel) {
+        this.roleService.seedRolesInDB();
 
-        userEntity.setPassword(this.bCryptPasswordEncoder.encode(userEntity.getPassword()));
-
-        if(this.userRepository.findAll().isEmpty()) {
-            this.roleService.seedRolesInDB();
-      //      userEntity.setAuthorities(this.);
+        User user = this.modelMapper.map(userServiceModel, User.class);
+        if (this.userRepository.count() == 0) {
+            user.setAuthorities(new LinkedHashSet<>(this.roleRepository.findAll()));
         } else {
-            userEntity.setAuthorities(this.getAuthorities("USER"));
+            LinkedHashSet<Role> roles = new LinkedHashSet<>();
+            roles.add(this.roleRepository.findByAuthority("USER"));
+            user.setAuthorities(roles);
         }
 
-        try {
-            this.userRepository.save(userEntity);
-        } catch (Exception ignored) {
-            //TODO: Fix this when discover exception type.
-            return false;
-        }
-
+        user.setPassword(this.bCryptPasswordEncoder.encode(userServiceModel.getPassword()));
+        this.userRepository.saveAndFlush(user);
         return true;
     }
 
