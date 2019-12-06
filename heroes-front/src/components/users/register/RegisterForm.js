@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withRouter } from 'react-router-dom';
 
 import "../../blur.css";
+import "../users.css";
 import axios from "axios";
 
 class RegisterForm extends Component {
@@ -42,9 +43,10 @@ class RegisterForm extends Component {
   render() {
     return (
       <form className="bg-text" onSubmit={this.handleSubmit}>
+        <h3 className="text-font">Register</h3>
         <div className="form-group">
           <label>
-            Username:
+            <h6>Username:</h6>
             <input
               type="text"
               placeholder="Username"
@@ -57,9 +59,9 @@ class RegisterForm extends Component {
         </div>
         <div className="form-group">
           <label>
-            Password:
+          <h6>Password:</h6>
             <input
-              type="text"
+              type="password"
               placeholder="Password"
               className="form-control"
               value={this.state.password}
@@ -70,9 +72,9 @@ class RegisterForm extends Component {
         </div>
         <div className="form-group">
           <label>
-            Confirm Password:
+          <h6>Confirm Password:</h6>
             <input
-              type="text"
+              type="password"
               className="form-control"
               placeholder="Confirm Password"
               value={this.state.confirmPassword}
@@ -83,7 +85,7 @@ class RegisterForm extends Component {
         </div>
         <div className="form-group">
           <label>
-            Email:
+          <h6>Email:</h6>
             <input
               type="email"
               placeholder="Email"

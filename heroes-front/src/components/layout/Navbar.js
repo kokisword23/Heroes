@@ -23,7 +23,7 @@ const Navbar = ({ isLogged }) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav text-uppercase ml-auto">
-            {!isLogged && (
+            {isLogged && (
               <li className="nav-item">
                 <Link
                   className="nav-link js-scroll-trigger"
@@ -33,18 +33,28 @@ const Navbar = ({ isLogged }) => {
                 </Link>
               </li>
             )}
+            {isLogged && (
+              <li className="nav-item">
+                <Link
+                  className="nav-link js-scroll-trigger"
+                  to="/logout"
+                >
+                  Logout
+                </Link>
+              </li>
+            )}
             <li className="nav-item">
-              {isLogged && (
+              {!isLogged && (
                 <Link className="nav-link js-scroll-trigger" to="/users/login">
                   Login
                 </Link>
               )}
             </li>
             <li className="nav-item">
-              {isLogged && (
+              {!isLogged && (
                 <Link
                   className="nav-link js-scroll-trigger"
-                  to="/users/register"
+                  to="/"
                 >
                   Register
                 </Link>

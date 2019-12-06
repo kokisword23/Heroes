@@ -1,37 +1,60 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/layout/Navbar";
+import Index from "./components/pages/Index";
+import Login from "./components/pages/Login";
+import userService from "./services/user-service";
+import Logout from "./components/users/logout/Logout";
 import Home from "./components/home/Home";
-import Register from "./components/users/register/Register";
-import Login from "./components/users/login/Login";
 
 class App extends Component {
   constructor(props) {
     super(props);
-    const isLogged = !!localStorage.getItem('token');
+    const isLogged = !!localStorage.getItem("token");
     this.state = { isLogged };
   }
 
+  login = user => {
+    userService.login(user).then(() => {
+      this.setState({ isLogged: true });
+      this.props.history.push("/home");
+    });
+  };
+
+  logout = () => {
+    userService.logout();
+    this.setState({ isLogged: false });
+    this.props.history.push("/");
+    return null;
+  };
+
   render() {
     const { isLogged } = this.state;
+    console.log(isLogged);
 
     return (
       <div className="root">
-        <Router>
-          <Navbar isLogged={isLogged} />
-          <div className="page-content-wrapper">
-            <Home />
-            <Switch>
-              <Route exact path="/about" />
-              <Route exact path="/users/login" component={Login} />
-              <Route exact path="/users/register" component={Register} />
-            </Switch>
-          </div>
-        </Router>
-      </div>
+        <Navbar isLogged={isLogged} />
+          <Switch>
+            <Route exact path ="/" component={Index} />
+            <Route
+              exact
+              path="/users/login"
+              component={() => (
+                <Login login={this.login} isLogged={isLogged} />
+              )}
+            />
+            <Route
+              exact
+              path="/logout"
+              component={() => <Logout logout={this.logout} />}
+            />
+            <Route exact path="/home" component={Home}/>
+          </Switch>
+        </div>
     );
   }
 }
 
-export default App;
+export default withRouter(App);

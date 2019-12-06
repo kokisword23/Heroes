@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
-import { getToken, saveToken } from '../../../utils/jwt';
+
 import "../../blur.css";
-import axios from "axios";
+import "../users.css";
 
 
 class LoginForm extends Component {
@@ -26,32 +26,16 @@ class LoginForm extends Component {
     event.preventDefault();
     const { username, password } = this.state;
     const user = { username, password };
-  
-    const axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*"
-      }
-    };
-
-    if(getToken()) {
-        axiosConfig.headers['Authorization'] = 'Bearer ' + getToken();
-    }
-    
-    axios.post("http://localhost:8080/login", user, axiosConfig)
-    .then((data, status, request) => { 
-        saveToken(data.data);
-         this.props.history.push("/home");
-    });
-
+    this.props.login(user);
   }
 
   render() {
     return (
       <form className="bg-text" onSubmit={this.handleSubmit}>
+        <h3 className="text-font">Login</h3>
         <div className="form-group">
           <label>
-            Username:
+            <h6>Username:</h6>
             <input
               type="text"
               placeholder="Username"
@@ -64,9 +48,9 @@ class LoginForm extends Component {
         </div>
         <div className="form-group">
           <label>
-            Password:
+           <h6>Password:</h6>
             <input
-              type="text"
+              type="password"
               placeholder="Password"
               className="form-control"
               value={this.state.password}
@@ -78,7 +62,7 @@ class LoginForm extends Component {
           <input
             type="submit"
             className="btn btn-secondary mt-2"
-            value="Sign up"
+            value="Sign in"
           />
         </div>
         {/* <InputLabel
