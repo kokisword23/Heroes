@@ -17,6 +17,8 @@ public class User extends BaseEntity implements UserDetails {
 
     private Set<Role> authorities;
 
+    private Hero hero;
+
     public User() {
     }
 

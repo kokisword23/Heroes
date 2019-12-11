@@ -3,7 +3,6 @@ import { withRouter } from 'react-router-dom';
 
 import "../../blur.css";
 import "../users.css";
-import axios from "axios";
 
 class RegisterForm extends Component {
   constructor(props) {
@@ -30,14 +29,7 @@ class RegisterForm extends Component {
       return;
     }
 
-    const axiosConfig = {
-      headers: {
-        "Content-Type": "application/json;charset=UTF-8",
-        "Access-Control-Allow-Origin": "*"
-      }
-    };
-    axios.post("http://localhost:8080/api/users/register", user, axiosConfig);
-    this.props.history.push('/')
+    this.props.register(user);
   }
 
   render() {

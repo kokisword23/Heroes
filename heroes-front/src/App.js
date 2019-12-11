@@ -7,12 +7,15 @@ import Login from "./components/pages/Login";
 import userService from "./services/user-service";
 import Logout from "./components/users/logout/Logout";
 import Home from "./components/home/Home";
+import heroService from "./services/hero-service";
+import {hasUserHero} from "./utils/jwt";
 
 class App extends Component {
   constructor(props) {
     super(props);
     const isLogged = !!localStorage.getItem("token");
-    this.state = { isLogged };
+    const hasHero = hasUserHero();
+    this.state = { isLogged, hasHero};
   }
 
   login = user => {
@@ -29,15 +32,26 @@ class App extends Component {
     return null;
   };
 
-  render() {
-    const { isLogged } = this.state;
-    console.log(isLogged);
+  register = user => {
+    userService.register(user);
+    this.props.history.push("/users/login");
+  }
 
+  create = hero => {
+    heroService.create(hero);
+    this.props.history.push("/home");
+  }
+
+  render() {
+    const { isLogged, hasHero } = this.state;
+    console.log(hasHero)
     return (
       <div className="root">
         <Navbar isLogged={isLogged} />
           <Switch>
-            <Route exact path ="/" component={Index} />
+            <Route exact path ="/" component={() =>  (
+              <Index register={this.register} />
+            )} />
             <Route
               exact
               path="/users/login"
@@ -50,7 +64,9 @@ class App extends Component {
               path="/logout"
               component={() => <Logout logout={this.logout} />}
             />
-            <Route exact path="/home" component={Home}/>
+            <Route exact path="/home" component={() => (
+              <Home create={this.create} hasHero={hasHero}/>
+            )}/>
           </Switch>
         </div>
     );

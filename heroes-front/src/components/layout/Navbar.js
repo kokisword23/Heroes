@@ -6,9 +6,16 @@ const Navbar = ({ isLogged }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark" id="mainNav">
       <div className="container">
-        <Link className="navbar-brand js-scroll-trigger" to="/">
-          Heroes
-        </Link>
+        {isLogged && (
+          <Link className="navbar-brand js-scroll-trigger" to="/home">
+            Heroes
+          </Link>
+        )}
+         {!isLogged && (
+          <Link className="navbar-brand js-scroll-trigger" to="/">
+            Heroes
+          </Link>
+        )}
         <button
           className="navbar-toggler navbar-toggler-right"
           type="button"
@@ -25,20 +32,7 @@ const Navbar = ({ isLogged }) => {
           <ul className="navbar-nav text-uppercase ml-auto">
             {isLogged && (
               <li className="nav-item">
-                <Link
-                  className="nav-link js-scroll-trigger"
-                  to="/heroes/create"
-                >
-                  Create
-                </Link>
-              </li>
-            )}
-            {isLogged && (
-              <li className="nav-item">
-                <Link
-                  className="nav-link js-scroll-trigger"
-                  to="/logout"
-                >
+                <Link className="nav-link js-scroll-trigger" to="/logout">
                   Logout
                 </Link>
               </li>
@@ -52,10 +46,7 @@ const Navbar = ({ isLogged }) => {
             </li>
             <li className="nav-item">
               {!isLogged && (
-                <Link
-                  className="nav-link js-scroll-trigger"
-                  to="/"
-                >
+                <Link className="nav-link js-scroll-trigger" to="/">
                   Register
                 </Link>
               )}

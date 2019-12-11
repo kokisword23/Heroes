@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/api/heroes", consumes = "application/json", produces = "application/json")
@@ -25,8 +26,8 @@ public class HeroController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity save(@RequestBody HeroCreateModel heroModel) throws URISyntaxException {
-       boolean result =  heroService.save(modelMapper.map(heroModel, HeroServiceModel.class));
+    public ResponseEntity save(@RequestBody HeroCreateModel heroModel, Principal principal) throws URISyntaxException {
+       boolean result =  heroService.save(heroModel,principal.getName());
 
         return ResponseEntity.created(new URI("/heroes/create")).body(result);
     }

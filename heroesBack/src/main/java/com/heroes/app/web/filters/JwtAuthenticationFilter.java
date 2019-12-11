@@ -2,10 +2,11 @@ package com.heroes.app.web.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.heroes.app.data.models.User;
+import com.heroes.app.service.services.HeroService;
 import com.heroes.app.web.models.UserLoginModel;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.hibernate.annotations.Filter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,9 +25,12 @@ import java.util.Date;
 @Order(0)
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
+    private final HeroService heroService;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+    @Autowired
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, HeroService heroService) {
         this.authenticationManager = authenticationManager;
+        this.heroService = heroService;
     }
 
     @Override
@@ -59,11 +63,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .setSubject(user.getUsername())
                 .setExpiration(new Date(System.currentTimeMillis() + 1200000))
                 .claim("role", authority)
+                .claim("hasHero", this.heroService.hasHero(user.getUsername()))
                 .signWith(SignatureAlgorithm.HS256, "Secret".getBytes())
                 .compact();
 
         response.getWriter()
-                .append("Authorization: Bearer " + token);
+                .append(token);
 
         response.addHeader("Authorization", "Bearer " + token);
     }

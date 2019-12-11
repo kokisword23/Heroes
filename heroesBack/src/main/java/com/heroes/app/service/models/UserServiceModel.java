@@ -8,6 +8,7 @@ public class UserServiceModel {
     private String password;
     private String email;
     private Set<RoleServiceModel> authorities;
+    private HeroServiceModel heroServiceModel;
 
     public UserServiceModel() {
     }
@@ -42,5 +43,13 @@ public class UserServiceModel {
 
     public void setAuthorities(Set<RoleServiceModel> authorities) {
         this.authorities = authorities;
+    }
+
+    public HeroServiceModel getHeroServiceModel() {
+        return heroServiceModel;
+    }
+
+    public void setHeroServiceModel(HeroServiceModel heroServiceModel) {
+        this.heroServiceModel = heroServiceModel;
     }
 }
