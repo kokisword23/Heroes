@@ -10,5 +10,7 @@ public interface HeroService {
 
     HeroServiceModel getByHeroName(String heroName);
 
+    String getHeroName(String username);
+
     boolean hasHero(String username);
 }

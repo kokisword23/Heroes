@@ -18,6 +18,14 @@ const heroService = {
       hero,
       axiosConfig
     );
+  },
+
+  getHeroName: function () {
+    return localStorage.getItem('hero');
+  },
+
+  getHero: function(heroName) {
+    return axios.get(`http://localhost:8080/api/heroes/details/${heroName}`, axiosConfig);
   }
 };
 

@@ -7,8 +7,11 @@ export function saveToken(token) {
 }
 
 export function hasUserHero() {
-    if(!!getToken()) {
+    if(localStorage.getItem('token') != null) {
         return JSON.parse(atob(getToken().split('.')[1])).hasHero;
     }
-    return false;
+}
+
+export function getHeroNameFromToken() {
+    return JSON.parse(atob(getToken().split('.')[1])).heroName;
 }

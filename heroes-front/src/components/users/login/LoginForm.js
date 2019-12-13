@@ -24,6 +24,7 @@ class LoginForm extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
+    this.props.handler();
     const { username, password } = this.state;
     const user = { username, password };
     this.props.login(user);

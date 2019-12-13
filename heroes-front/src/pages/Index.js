@@ -1,6 +1,6 @@
 import React from "react";
-import IndexText from "../home/IndexText";
-import RegisterForm from "../users/register/RegisterForm";
+import IndexText from "../components/home/IndexText";
+import RegisterForm from "../components/users/register/RegisterForm";
 
 const IndexPage = ({register}) => {
   return (

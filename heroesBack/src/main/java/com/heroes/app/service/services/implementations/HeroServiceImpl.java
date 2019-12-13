@@ -48,6 +48,11 @@ public class HeroServiceImpl implements HeroService {
     }
 
     @Override
+    public String getHeroName(String username) {
+        return this.heroRepository.findByUserUsername(username).get().getName();
+    }
+
+    @Override
     public boolean hasHero(String username) {
        return this.heroRepository.findByUserUsername(username).isPresent();
     }
