@@ -6,31 +6,42 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import userService from "./services/user-service";
 import Logout from "./components/users/logout/Logout";
-import Home from "./pages/Home";
+import Create from "./components/heroes/create/Create";
 import heroService from "./services/hero-service";
-import { hasUserHero } from "./utils/jwt";
+import { hasUserHero, isAdmin, getHeroNameFromToken } from "./utils/jwt";
+import HeroDetails from "./components/heroes/details/HeroDetails";
+import ItemForm from "./components/items/ItemForm";
+import itemService from "./services/item-service";
+import Merchant from "./components/merchant/Merchant";
 
 class App extends Component {
   constructor(props) {
     super(props);
     const isLogged = !!localStorage.getItem("token");
     const hasHero = false;
-    this.state = { isLogged, hasHero };
+    const isAdmin = false;
+    this.state = { isLogged, hasHero, isAdmin };
 
     this.handler = this.handler.bind(this);
+    this.adminHandler = this.adminHandler.bind(this);
   }
 
   login = user => {
-    userService.login(user).then(() => {
-      this.setState({ isLogged: true });
+    userService.login(user).then((data) => {
       this.handler();
-      this.props.history.push("/home");
+      this.setState({ isLogged: true, isAdmin: isAdmin() });
+      if (this.state.hasHero === true) {
+        localStorage.setItem("hero",getHeroNameFromToken())
+        return this.props.history.push("/home");
+      }
+
+      this.props.history.push("/heroes/create");
     });
   };
 
   logout = () => {
     userService.logout();
-    this.setState({ isLogged: false });
+    this.setState({ isLogged: false, isAdmin: false });
     this.props.history.push("/");
   };
 
@@ -39,20 +50,37 @@ class App extends Component {
     this.props.history.push("/users/login");
   };
 
-  create = hero => {
-    heroService.create(hero);
-    this.props.history.push("/home");
+  createHero = hero => {
+    heroService.create(hero).then(() => {
+      this.props.history.push("/home");
+    });
   };
+
+  createItem = item => {
+    itemService.create(item).then(() => {
+      this.props.history.push("/home");
+    })
+  }
 
   handler() {
     this.setState({ hasHero: hasUserHero() });
   }
 
+  adminHandler() {
+    this.setState({ isAdmin: isAdmin() });
+  }
+
+  componentDidMount() {
+    if (this.state.isLogged) {
+      this.adminHandler();
+    }
+  }
+
   render() {
-    const { isLogged, hasHero } = this.state;
+    const { isLogged, isAdmin } = this.state;
     return (
       <div className="root">
-        <Navbar isLogged={isLogged} />
+        <Navbar isLogged={isLogged} isAdmin={isAdmin} />
         <Switch>
           <Route
             exact
@@ -78,7 +106,23 @@ class App extends Component {
           <Route
             exact
             path="/home"
-            component={() => <Home create={this.create} hasHero={hasHero} />}
+            component={() => <HeroDetails adminHandler={this.adminHandler} />}
+            // component={() => <Home create={this.create} hasHero={hasHero} />}
+          />
+          <Route
+            exact
+            path="/heroes/create"
+            component={() => <Create create={this.createHero} />}
+          />
+          <Route
+            exact
+            path="/items/create"
+            component={() => <ItemForm create={this.createItem}/>}
+          />
+          <Route
+            exact
+            path="/merchant"
+            component={() => <Merchant history={this.props.history} />}
           />
         </Switch>
       </div>

@@ -1,30 +1,15 @@
-package com.heroes.app.service.models;
+package com.heroes.app.web.models;
 
-import com.heroes.app.data.models.Slot;
+public class ItemCreateModel {
 
-import java.util.List;
-
-public class ItemServiceModel {
-
-    private String id;
     private String name;
-    private Slot slot;
+    private String slot;
     private int stamina;
     private int strength;
     private int attack;
     private int defence;
-    private boolean isOwned;
 
-
-    public ItemServiceModel() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public ItemCreateModel() {
     }
 
     public String getName() {
@@ -35,11 +20,11 @@ public class ItemServiceModel {
         this.name = name;
     }
 
-    public Slot getSlot() {
+    public String getSlot() {
         return slot;
     }
 
-    public void setSlot(Slot slot) {
+    public void setSlot(String slot) {
         this.slot = slot;
     }
 
@@ -74,14 +59,4 @@ public class ItemServiceModel {
     public void setDefence(int defence) {
         this.defence = defence;
     }
-
-    public boolean isOwned() {
-        return isOwned;
-    }
-
-    public void setOwned(boolean owned) {
-        isOwned = owned;
-    }
-
-
 }

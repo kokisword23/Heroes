@@ -15,3 +15,8 @@ export function hasUserHero() {
 export function getHeroNameFromToken() {
     return JSON.parse(atob(getToken().split('.')[1])).heroName;
 }
+
+export function isAdmin() {
+    console.log();
+    return JSON.parse(atob(getToken().split('.')[1])).role === "ADMIN";
+}

@@ -35,7 +35,7 @@ public class HeroController {
     }
 
     @GetMapping(value = "/details/{name}")
-    public ResponseEntity heroDetails(@PathVariable String name) throws URISyntaxException {
+    public ResponseEntity heroDetails(@PathVariable String name) throws URISyntaxException   {
         HeroDetailsModel hero = this.modelMapper.map(this.heroService.getByHeroName(name), HeroDetailsModel.class);
         return  ResponseEntity.created(new URI("/heroes/details/" + name)).body(hero);
     }

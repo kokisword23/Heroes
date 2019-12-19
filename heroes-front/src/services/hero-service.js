@@ -11,7 +11,7 @@ const axiosConfig = {
 
 const heroService = {
   create: function(hero) {
-     localStorage.setItem("hero", hero.name);
+    localStorage.setItem("hero", hero.name);
 
     return axios.post(
       "http://localhost:8080/api/heroes/create",

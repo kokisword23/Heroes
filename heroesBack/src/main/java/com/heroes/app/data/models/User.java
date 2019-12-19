@@ -71,6 +71,15 @@ public class User extends BaseEntity implements UserDetails {
         this.authorities = authorities;
     }
 
+    @OneToOne(mappedBy = "user")
+    public Hero getHero() {
+        return hero;
+    }
+
+    public void setHero(Hero hero) {
+        this.hero = hero;
+    }
+
     @Override
     @Transient
     public boolean isAccountNonExpired() {

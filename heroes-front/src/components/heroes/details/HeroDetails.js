@@ -1,10 +1,13 @@
 import React, { Component } from "react";
 
 import "./heroDetails.css";
+import "../../blur.css";
 import heroService from "../../../services/hero-service";
-import { getHeroNameFromToken } from "../../../utils/jwt";
+import Image from "../Image";
 
 class HeroDetails extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -17,19 +20,72 @@ class HeroDetails extends Component {
       attack: 0,
       defence: 0
     };
-    this.getHero = this.getHero.bind(this);
   }
-
-  getHero() {
-    heroService.getHero(getHeroNameFromToken()).then((data) => {
-        const {name, gender, level, stamina, strength, attack,defence} = data.data;
-        this.setState({name, gender,level,stamina,strength,attack,defence});
+  
+  componentDidMount() {
+    this._isMounted = true;
+    
+    heroService.getHero(localStorage.getItem("hero")).then(data => {
+      const {
+        name,
+        gender,
+        level,
+        stamina,
+        strength,
+        attack,
+        defence
+      } = data.data;
+      if (this._isMounted) {
+        this.setState({
+          name,
+          gender,
+          level,
+          stamina,
+          strength,
+          attack,
+          defence
+        });
+      }
     });
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   render() {
-    this.getHero()
-    return <div className="row"></div>;
+    return (
+      <div className="container bg-text mt-5">
+        <div className="row">
+          <div className="col col-md-4">
+            <div className="mt-1">
+              <h3 className="cool-font">{this.state.name}</h3>
+            </div>
+          </div>
+          <div className="col col-md-4"></div>
+          <div className="col col-md-4"></div>
+        </div>
+        <div className="row">
+          <div className="col col-md-4">
+            {this.state.gender !=="" && <Image gender={this.state.gender} />}
+          </div>
+          <div className="col col-md-4">
+            <div className="mt-5">
+              <h3 className="cool-font">Stamina - {this.state.stamina}</h3>
+              <h3 className="cool-font">Strength - {this.state.strength}</h3>
+              <h3 className="cool-font">Attack - {this.state.attack}</h3>
+              <h3 className="cool-font">Defence - {this.state.defence}</h3>
+            </div>
+          </div>
+          <div className="col col-md-4"></div>
+        </div>
+        <div className="row">
+          <div className="col col-md-4"></div>
+          <div className="col col-md-4"></div>
+          <div className="col col-md-4"></div>
+        </div>
+      </div>
+    );
   }
 }
 

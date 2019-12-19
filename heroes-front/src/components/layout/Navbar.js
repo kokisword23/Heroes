@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
 
-const Navbar = ({ isLogged }) => {
+const Navbar = ({ isLogged, isAdmin }) => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark" id="mainNav">
       <div className="container">
@@ -11,7 +11,7 @@ const Navbar = ({ isLogged }) => {
             Heroes
           </Link>
         )}
-         {!isLogged && (
+        {!isLogged && (
           <Link className="navbar-brand js-scroll-trigger" to="/">
             Heroes
           </Link>
@@ -30,6 +30,20 @@ const Navbar = ({ isLogged }) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav text-uppercase ml-auto">
+            {isLogged && isAdmin  && (
+              <li className="nav-item">
+              <Link className="nav-link js-scroll-trigger" to="/items/create">
+                Create Item
+              </Link>
+            </li>
+            )}
+             {isLogged && (
+              <li className="nav-item">
+                <Link className="nav-link js-scroll-trigger" to="/merchant">
+                  Merchant
+                </Link>
+              </li>
+            )}
             {isLogged && (
               <li className="nav-item">
                 <Link className="nav-link js-scroll-trigger" to="/logout">

@@ -32,6 +32,7 @@ const userService = {
 
   logout: function() {
      localStorage.clear();
+     axios.post("http://localhost:8080/logout",axiosConfig);
   }
 };
 

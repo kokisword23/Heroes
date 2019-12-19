@@ -49,7 +49,8 @@ public class HeroServiceImpl implements HeroService {
 
     @Override
     public String getHeroName(String username) {
-        return this.heroRepository.findByUserUsername(username).get().getName();
+        Hero hero = this.heroRepository.findByUserUsername(username).orElse(null);
+        return hero != null ? hero.getName() : "";
     }
 
     @Override
