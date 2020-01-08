@@ -1,13 +1,15 @@
 import axios from "axios";
-import { getToken} from "../utils/jwt";
+import { getToken } from "../utils/jwt";
 
-const axiosConfig = {
-  headers: {
-    "Content-Type": "application/json;charset=UTF-8",
-    "Access-Control-Allow-Origin": "*",
-    "Authorization": 'Bearer ' + getToken()
-  }
-};
+function getAxiosConfig() {
+  return {
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      "Access-Control-Allow-Origin": "*",
+      "Authorization": 'Bearer ' + getToken()
+    }
+  };
+}
 
 const heroService = {
   create: function(hero) {
@@ -16,7 +18,7 @@ const heroService = {
     return axios.post(
       "http://localhost:8080/api/heroes/create",
       hero,
-      axiosConfig
+      getAxiosConfig()
     );
   },
 
@@ -25,7 +27,18 @@ const heroService = {
   },
 
   getHero: function(heroName) {
-    return axios.get(`http://localhost:8080/api/heroes/details/${heroName}`, axiosConfig);
+    return axios.get(`http://localhost:8080/api/heroes/details/${heroName}`, getAxiosConfig());
+  },
+
+  getOpponents: function () {
+    return axios.get("http://localhost:8080/api/heroes/arena", getAxiosConfig());
+  },
+
+  fight: function (heroName) {
+    return axios.get(`http://localhost:8080/api/heroes/arena/${heroName}`, getAxiosConfig());
+  },
+  winner: function(heroName) {
+    return axios.post(`http://localhost:8080/api/heroes/arena/${heroName}`,"", getAxiosConfig());
   }
 };
 

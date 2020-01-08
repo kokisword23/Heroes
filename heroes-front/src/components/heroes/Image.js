@@ -9,6 +9,7 @@ import Gauntlets from "../../gauntlet.jpg";
 import Weapon from "../../weapon.jpg";
 
 const Image = ({ gender, slot }) => {
+  console.log(gender);
   if (gender === "MALE") {
     return <img src={MaleImg} alt="Male avatar" height="350px" width="250px" />;
   } else if (gender === "FEMALE") {
@@ -21,7 +22,8 @@ const Image = ({ gender, slot }) => {
         src={Helmet}
         alt="Helmet"
         className="border border-white"
-        height="150px"
+        height="125px"
+        width="125px"
       />
     );
   } else if (slot === "PAULDRON") {
@@ -30,8 +32,8 @@ const Image = ({ gender, slot }) => {
         src={Pauldron}
         className="border border-white"
         alt="Pauldron"
-        height="150px"
-        width="150px"
+        height="125px"
+        width="125px"
       />
     );
   } else if (slot === "PADS") {
@@ -40,8 +42,8 @@ const Image = ({ gender, slot }) => {
         src={Pads}
         alt="Pads"
         className="border border-white"
-        height="150px"
-        width="150px"
+        height="125px"
+        width="125px"
       />
     );
   } else if (slot === "GAUNTLETS") {
@@ -50,18 +52,18 @@ const Image = ({ gender, slot }) => {
         src={Gauntlets}
         alt="Gauntlets"
         className="border border-white"
-        height="150px"
-        width="150px"
+        height="125px"
+        width="125px"
       />
     );
   } else if (slot === "WEAPON") {
     return (
       <img
         src={Weapon}
-        alt="Male avatar"
+        alt="Weapon"
         className="border border-white"
-        height="150px"
-        width="150px"
+        height="125px"
+        width="125px"
       />
     );
   }

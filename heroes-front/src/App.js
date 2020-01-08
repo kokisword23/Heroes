@@ -13,6 +13,8 @@ import HeroDetails from "./components/heroes/details/HeroDetails";
 import ItemForm from "./components/items/ItemForm";
 import itemService from "./services/item-service";
 import Merchant from "./components/merchant/Merchant";
+import Arena from "./components/heroes/arena/Arena";
+import Fight from "./components/heroes/fight/Fight";
 
 class App extends Component {
   constructor(props) {
@@ -27,11 +29,11 @@ class App extends Component {
   }
 
   login = user => {
-    userService.login(user).then((data) => {
+    userService.login(user).then(data => {
       this.handler();
       this.setState({ isLogged: true, isAdmin: isAdmin() });
       if (this.state.hasHero === true) {
-        localStorage.setItem("hero",getHeroNameFromToken())
+        localStorage.setItem("hero", getHeroNameFromToken());
         return this.props.history.push("/home");
       }
 
@@ -59,8 +61,9 @@ class App extends Component {
   createItem = item => {
     itemService.create(item).then(() => {
       this.props.history.push("/home");
-    })
-  }
+    });
+  };
+
 
   handler() {
     this.setState({ hasHero: hasUserHero() });
@@ -114,16 +117,18 @@ class App extends Component {
             path="/heroes/create"
             component={() => <Create create={this.createHero} />}
           />
+          <Route exact path="/heroes/arena" component={() => <Arena  history={this.props.history}/>} />
           <Route
             exact
             path="/items/create"
-            component={() => <ItemForm create={this.createItem}/>}
+            component={() => <ItemForm create={this.createItem} />}
           />
           <Route
             exact
             path="/merchant"
             component={() => <Merchant history={this.props.history} />}
           />
+          <Route exact path ="/heroes/arena/:name" component={() => <Fight/>}/>
         </Switch>
       </div>
     );

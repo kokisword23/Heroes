@@ -7,8 +7,6 @@ const Items = ({ items, loading }) => {
     return <Spinner />;
   }
 
-  console.log(items);
-
   return (
     <>
       {items.map(item => (

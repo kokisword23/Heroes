@@ -1,16 +1,16 @@
 import React, { Component } from "react";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 import itemService from "../../services/item-service";
 
 class ItemSingle extends Component {
-    _isMounted = false;
-  
-    constructor(props) {
+  _isMounted = false;
+
+  constructor(props) {
     super(props);
 
     this.state = {
-        id: "",
+      id: "",
       name: "",
       slot: "",
       stamina: 0,
@@ -26,17 +26,34 @@ class ItemSingle extends Component {
   handleSubmit(event) {
     event.preventDefault();
     itemService.addItemToUser(this.state.id);
-    
+
     this.props.history.push("/home");
-}
+  }
 
   componentDidMount() {
     this._isMounted = true;
 
-    const {id, name, slot, stamina, strength, attack, defence, owned} = this.props.item;
-    console.log(this.props.item);
+    const {
+      id,
+      name,
+      slot,
+      stamina,
+      strength,
+      attack,
+      defence,
+      owned
+    } = this.props.item;
     if (this._isMounted) {
-        this.setState({id, name, slot, stamina, strength, attack, defence, owned});
+      this.setState({
+        id,
+        name,
+        slot,
+        stamina,
+        strength,
+        attack,
+        defence,
+        owned
+      });
     }
   }
 
@@ -60,7 +77,9 @@ class ItemSingle extends Component {
         <td>{defence}</td>
         <td>
           {owned.toString() !== "true" && (
-            <form onSubmit={this.handleSubmit}><input type="submit" className="btn btn-secondary" value="Buy" /></form>
+            <form className="w-50" onSubmit={this.handleSubmit}>
+              <input type="submit" className="btn btn-secondary" value="Buy" />
+            </form>
           )}
         </td>
       </tr>

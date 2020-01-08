@@ -8,9 +8,13 @@ import com.heroes.app.service.models.HeroServiceModel;
 import com.heroes.app.service.services.HeroService;
 import com.heroes.app.service.services.factories.HeroFactory;
 import com.heroes.app.web.models.HeroCreateModel;
+import com.heroes.app.web.models.HeroDetailsModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HeroServiceImpl implements HeroService {
@@ -55,6 +59,48 @@ public class HeroServiceImpl implements HeroService {
 
     @Override
     public boolean hasHero(String username) {
-       return this.heroRepository.findByUserUsername(username).isPresent();
+        return this.heroRepository.findByUserUsername(username).isPresent();
+    }
+
+    @Override
+    public List<HeroServiceModel> getOpponents(String heroName) {
+        List<Hero> heroes = this.heroRepository.findAllByUserUsernameNot(heroName);
+
+        return heroes.stream().map(h -> this.modelMapper.map(h, HeroServiceModel.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public HeroServiceModel getByUsername(String username) {
+        Hero hero = this.heroRepository.findByUserUsername(username).orElse(null);
+        return this.modelMapper.map(hero, HeroServiceModel.class);
+    }
+
+    @Override
+    public String getWinner(HeroDetailsModel hero, HeroDetailsModel opponent) {
+        int heroDmg = hero.getAttack() + hero.getStrength() * 4 -
+                (opponent.getDefence() + opponent.getStamina() * 2);
+        int opponentDmg = opponent.getAttack() + opponent.getStrength() * 4 -
+                (hero.getDefence() + hero.getStamina() * 2);
+
+        if (heroDmg > opponentDmg) {
+            levelUp(heroRepository
+                    .findByName(hero.getName()).getName());
+            return hero.getName();
+        } else {
+            levelUp(heroRepository
+                    .findByName(opponent.getName()).getName());
+            return opponent.getName();
+        }
+    }
+
+    @Override
+    public void levelUp(String heroName) {
+        Hero hero = heroRepository.findByName(heroName);
+        hero.setLevel(hero.getLevel() + 1);
+        hero.setStrength(hero.getStrength() + 5);
+        hero.setStamina(hero.getStamina() + 5);
+
+        heroRepository.save(hero);
     }
 }

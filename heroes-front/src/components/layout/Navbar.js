@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./navbar.css";
+import { hasUserHero } from "../../utils/jwt";
 
 const Navbar = ({ isLogged, isAdmin }) => {
   return (
@@ -30,14 +31,21 @@ const Navbar = ({ isLogged, isAdmin }) => {
         </button>
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav text-uppercase ml-auto">
-            {isLogged && isAdmin  && (
+            {isLogged && isAdmin && (
               <li className="nav-item">
-              <Link className="nav-link js-scroll-trigger" to="/items/create">
-                Create Item
-              </Link>
-            </li>
+                <Link className="nav-link js-scroll-trigger" to="/items/create">
+                  Create Item
+                </Link>
+              </li>
             )}
-             {isLogged && (
+            {isLogged && hasUserHero && (
+               <li className="nav-item">
+               <Link className="nav-link js-scroll-trigger" to="/heroes/arena">
+                 Arena
+               </Link>
+             </li>
+            )}
+            {isLogged && (
               <li className="nav-item">
                 <Link className="nav-link js-scroll-trigger" to="/merchant">
                   Merchant
